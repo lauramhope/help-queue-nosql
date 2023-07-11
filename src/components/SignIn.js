@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 
 function SignIn(){  
   const [signUpSuccess, setSignUpSuccess] = useState(null);
-  // new state variable
   const [signInSuccess, setSignInSuccess] = useState(null);
   const [signOutSuccess, setSignOutSuccess] = useState(null);
 
@@ -12,6 +12,7 @@ function SignIn(){
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
+    const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         setSignUpSuccess(`You've successfully signed up, ${userCredential.user.email}!`)
@@ -24,6 +25,7 @@ function SignIn(){
     event.preventDefault();
     const email = event.target.signinEmail.value;
     const password = event.target.signinPassword.value;
+    const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         setSignInSuccess(`You've successfully signed in as ${userCredential.user.email}!`)
@@ -32,11 +34,13 @@ function SignIn(){
         setSignInSuccess(`There was an error signing in: ${error.message}!`)
       });              
     }
-  function doSignOut() {
+  function doSignOut(event) {
+    event.preventDefault();
+    const auth = getAuth();
     signOut(auth)
-      .then(function() {
+      .then(() => {
       setSignOutSuccess("You've successfully signed out!");
-    }).catch(function(error) {
+    }).catch((error) => {
       setSignOutSuccess(`There was an error signing out: ${error.message}!`)
     });
   }
